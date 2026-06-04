@@ -138,11 +138,29 @@
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="database\supabase.cs" />
+    <Compile Include="EmployeeModal.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="EmployeeModal.Designer.cs">
+      <DependentUpon>EmployeeModal.cs</DependentUpon>
+    </Compile>
+    <Compile Include="EmployeesPanel.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="Form1.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Form1.Designer.cs">
       <DependentUpon>Form1.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Login.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Login.Designer.cs">
+      <DependentUpon>Login.cs</DependentUpon>
+    </Compile>
+    <Compile Include="LoginBase.cs">
+      <SubType>Form</SubType>
     </Compile>
     <Compile Include="MembersPanel.cs">
       <SubType>Component</SubType>
@@ -153,6 +171,9 @@
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="styles\Button_roundedCorners.cs" />
+    <EmbeddedResource Include="EmployeeModal.resx">
+      <DependentUpon>EmployeeModal.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Form1.resx">
       <DependentUpon>Form1.cs</DependentUpon>
     </EmbeddedResource>

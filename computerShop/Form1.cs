@@ -16,21 +16,29 @@ namespace computerShop
         private readonly Color _activeBg = Color.FromArgb(100, 116, 139);
         private readonly Color _hoverBg = Color.FromArgb(100, 116, 139);
         private readonly Color _defaultBg = Color.Transparent;
+        private EmployeesPanel _employeesPanel;
+        private Member _currentUser;
+        private Employee _loggedInEmployee;
 
-        public Form1()
+        public Form1(Employee loggedInEmployee)
         {
             InitializeComponent();
+            _loggedInEmployee = loggedInEmployee;
         }
 
         private async void Form1_Load(object sender, EventArgs e)
         {
             UiHelper.MakeRounded(DashboardBTN, 20);
             UiHelper.MakeRounded(membersBTN, 20);
+            UiHelper.MakeRounded(EmployeeBTN, 20);
+            UiHelper.MakeRounded(LogOutBTN, 20);
             UiHelper.AddRightBorder(left_navigation,
                 color: Color.FromArgb(0, 122, 204), thickness: 2);
 
             WireNavButton(DashboardBTN);
             WireNavButton(membersBTN);
+            WireNavButton(EmployeeBTN);
+            WireNavButton(LogOutBTN);
 
             _dashboardPanel = new DashboardPanel();
 
@@ -137,6 +145,11 @@ namespace computerShop
             _membersPanel.Visible = false;
             main.Controls.Add(_membersPanel, 0, 0);
             main.SetRowSpan(_membersPanel, 2);
+
+            _employeesPanel = new EmployeesPanel();
+            _employeesPanel.Visible = false;
+            main.Controls.Add(_employeesPanel, 0, 0);
+            main.SetRowSpan(_employeesPanel, 2);
 
             SetActive(DashboardBTN);
             await RefreshDashboardAsync();
@@ -249,11 +262,14 @@ namespace computerShop
 
         private void SetActive(Button btn)
         {
-            foreach (Button b in new Button[] { DashboardBTN, membersBTN })
+            // Update the array to include EmployeeBTN
+            foreach (Button b in new Button[] { DashboardBTN, membersBTN, EmployeeBTN })
             {
                 b.BackColor = _defaultBg;
                 b.ForeColor = Color.White;
             }
+
+            // Set the clicked button to active
             btn.BackColor = _activeBg;
             btn.ForeColor = Color.White;
             _activeBtn = btn;
@@ -263,18 +279,61 @@ namespace computerShop
         private void DashboardBTN_Click(object sender, EventArgs e)
         {
             SetActive(DashboardBTN);
+
+            // Explicitly hide others
             _dashboardPanel.Visible = true;
             _membersPanel.Visible = false;
+            _employeesPanel.Visible = false;
         }
 
         private async void membersBTN_Click(object sender, EventArgs e)
         {
             SetActive(membersBTN);
+
+            // Explicitly hide others
             _dashboardPanel.Visible = false;
             _membersPanel.Visible = true;
+            _employeesPanel.Visible = false;
+
             await _membersPanel.LoadMembersAsync();
         }
 
         private void body_Paint(object sender, PaintEventArgs e) { }
+
+        private async void EmployeeBTN_Click(object sender, EventArgs e)
+        {
+            SetActive(EmployeeBTN);
+
+            // Explicitly hide others
+            _dashboardPanel.Visible = false;
+            _membersPanel.Visible = false;
+            _employeesPanel.Visible = true;
+
+            await _employeesPanel.LoadEmployeesAsync();
+        }
+
+        private void LogOutBTN_Click(object sender, EventArgs e)
+        {
+            var result = MessageBox.Show("Are you sure you want to log out?", "Log Out",
+            MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+
+            if (result == DialogResult.Yes)
+            {
+                // 2. Stop live updates so you don't get background errors while closing
+                if (_dashboardPanel != null)
+                {
+                    _dashboardPanel.StopLiveUpdates();
+                }
+
+                // 3. Show the login form
+                // Replace 'LoginForm' with the exact class name of your login screen
+                var loginForm = new LoginForm();
+                loginForm.Show();
+
+                // 4. Close this form
+                this.Hide(); // Hide first to prevent flickering
+                this.Close();
+            }
+        }
     }
 }

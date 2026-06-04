@@ -39,7 +39,7 @@ namespace computerShop
 
         private void BuildLayout()
         {
-            var stack = new TableLayoutPanel { Dock = DockStyle.Fill, ColumnCount = 1, RowCount = 3, BackColor = Color.Transparent };
+            var stack = new TableLayoutPanel { Dock = DockStyle.Fill, ColumnCount = 2, RowCount = 2, BackColor = Color.Transparent };
             stack.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
             stack.RowStyles.Add(new RowStyle(SizeType.Absolute, 32F));
             stack.RowStyles.Add(new RowStyle(SizeType.Absolute, 120F));

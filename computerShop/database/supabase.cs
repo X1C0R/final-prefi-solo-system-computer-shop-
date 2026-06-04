@@ -1,13 +1,46 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using Supabase.Postgrest.Attributes;
+using Supabase.Postgrest.Models;
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
-using Newtonsoft.Json;
 
 namespace ComputerDashboard
 {
+    [Table("employees")]
+    public class Employee : BaseModel
+    {
+        [PrimaryKey("id")]
+        public Guid Id { get; set; }
+
+        [JsonProperty("first_name")]
+        [Column("first_name")]
+        public string FirstName { get; set; }
+
+        [JsonProperty("last_name")]
+        [Column("last_name")]
+        public string LastName { get; set; }
+
+        [JsonProperty("username")]
+        [Column("username")]
+        public string Username { get; set; }
+
+        [JsonProperty("email")]
+        [Column("email")]
+        public string Email { get; set; }
+
+        [JsonProperty("role")]
+        [Column("role")]
+        public string Role { get; set; }
+
+        [JsonProperty("password")]
+        [Column("password")]
+        public string Password { get; set; }
+    }
     public class Computer
     {
         [JsonProperty("id")] public string Id { get; set; }
@@ -164,9 +197,63 @@ namespace ComputerDashboard
             await _client.SendAsync(req);
         }
 
-        internal static async Task GetActiveMemberSessionByComputerAsync(string id)
+        public static async Task<Member> LoginAsync(string username, string password)
         {
-            throw new NotImplementedException();
+            var url = $"{BASE_URL}/rest/v1/members?username=eq.{username}&password=eq.{password}&select=*";
+            var response = await _client.GetAsync(url);
+            var json = await response.Content.ReadAsStringAsync();
+
+            // Deserialize to a list
+            var members = JsonConvert.DeserializeObject<List<Member>>(json);
+
+            // Return the first item if found, otherwise null
+            return members?.FirstOrDefault();
+        }
+        public static async Task<List<Employee>> GetEmployeesAsync()
+        {
+            var url = $"{BASE_URL}/rest/v1/employees?select=*";
+            var response = await _client.GetAsync(url);
+
+            // Check if the request was successful
+            if (response.IsSuccessStatusCode)
+            {
+                var json = await response.Content.ReadAsStringAsync();
+                return JsonConvert.DeserializeObject<List<Employee>>(json) ?? new List<Employee>();
+            }
+
+            return new List<Employee>();
+        }
+
+        public static async Task AddEmployeeAsync(string firstName, string lastName, string username, string email, string password, string role)
+        {
+            var body = new
+            {
+                first_name = firstName,
+                last_name = lastName,
+                username = username,
+                email = email,
+                password = password,
+                role = role
+            };
+
+            var json = JsonConvert.SerializeObject(body);
+            var req = new HttpRequestMessage(HttpMethod.Post, $"{BASE_URL}/rest/v1/employees");
+            req.Content = new StringContent(json, Encoding.UTF8, "application/json");
+
+            req.Headers.Add("Prefer", "return=minimal");
+
+            await _client.SendAsync(req);
+        }
+
+        public static async Task<Employee> LoginEmployeeAsync(string username, string password)
+        {
+            // Queries the 'employees' table
+            var url = $"{BASE_URL}/rest/v1/employees?username=eq.{username}&password=eq.{password}&select=*";
+            var response = await _client.GetAsync(url);
+            var json = await response.Content.ReadAsStringAsync();
+
+            var employees = JsonConvert.DeserializeObject<List<Employee>>(json);
+            return employees?.FirstOrDefault();
         }
     }
 }

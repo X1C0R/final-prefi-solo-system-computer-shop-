@@ -63,3 +63,4 @@ E:\Users\GOD IS LOVE\Documents\Mark code\computerShop\computerShop\bin\Debug\Sys
 E:\Users\GOD IS LOVE\Documents\Mark code\computerShop\computerShop\bin\Debug\Websocket.Client.xml
 E:\Users\GOD IS LOVE\Documents\Mark code\computerShop\computerShop\obj\Debug\computer.0930B67A.Up2Date
 E:\Users\GOD IS LOVE\Documents\Mark code\computerShop\computerShop\obj\Debug\computerShop.SessionModal.resources
+E:\Users\GOD IS LOVE\Documents\Mark code\computerShop\computerShop\obj\Debug\computerShop.EmployeeModal.resources
