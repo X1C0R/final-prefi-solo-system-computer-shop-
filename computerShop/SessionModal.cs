@@ -1,307 +1,329 @@
 ﻿using ComputerDashboard;
 using System;
+using System.Collections.Generic;
 using System.Drawing;
-using System.Drawing.Drawing2D;
+using System.Linq;
 using System.Windows.Forms;
 
 namespace computerShop
 {
-    // ✅ Must inherit Form to get ShowDialog()
-    public class SessionModal : Form
+    public partial class SessionModal : Form
     {
-        private Computer _computer;
+        public enum Action { Start, End, Pause, Reserve, Free, StopTime, ExtendOnly }
+        public Action SelectedAction { get; private set; }
+        public string CustomerName => nameInput?.Text?.Trim() ?? "";
+        public string SelectedMemberId { get; private set; }
 
-        public enum Action { None, Start, End, Reserve, Free }
-        public Action SelectedAction { get; private set; } = Action.None;
-        public string CustomerName { get; private set; } = "";
+        // Returns the calculated fractional hours limit from the user's input
+        public double SelectedHours { get; private set; } = -1;
+        public double ExtendedHours { get; private set; } = 0; // Used purely for adding time onto an active session
+
+        private Computer _computer;
+        private List<Member> _members = new List<Member>();
+
+        // UI Controls
+        private ComboBox memberCombo;
+        private TextBox nameInput;
+        private TextBox txtTimeInput;
+        private Button btnAction, btnReserve, btnStop, btnExtend, btnCancel;
+        private Label lblTitle, lblStatus, lblRunningBalance;
+
+        private readonly Color _blue = Color.FromArgb(0, 122, 204);
 
         public SessionModal(Computer computer)
         {
             _computer = computer;
-            InitUI();
+
+            this.FormBorderStyle = FormBorderStyle.FixedDialog;
+            this.MaximizeBox = false;
+            this.MinimizeBox = false;
+            this.BackColor = Color.FromArgb(15, 23, 42);
+            this.Size = new Size(460, 520);
+            this.Text = $"Manage — {computer.Name}";
+
+            
+
+
+            InitializeModalUI();
+            AddQuickTimeControls();
+            this.Load += SessionModal_Load;
+
+
         }
 
-        private void InitUI()
+        private void InitializeModalUI()
         {
-            Text = _computer.Name + " — " + _computer.Status.ToUpper();
-            Size = new Size(420, 400);
-            StartPosition = FormStartPosition.CenterParent;
-            BackColor = Color.FromArgb(15, 23, 42);
-            FormBorderStyle = FormBorderStyle.FixedDialog;
-            MaximizeBox = false;
-            MinimizeBox = false;
-
-            // ── Header strip ──────────────────────────────────────────────────
-            var header = new Panel
-            {
-                Dock = DockStyle.Top,
-                Height = 70,
-                BackColor = StatusColor(_computer.Status),
-            };
-
-            var titleLabel = new Label
-            {
-                Text = _computer.Name,
-                Font = new Font("Segoe UI", 20, FontStyle.Bold),
-                ForeColor = Color.White,
-                AutoSize = false,
-                Width = 250,
-                Height = 40,
-                Top = 12,
-                Left = 20,
-                BackColor = Color.Transparent,
-            };
-
-            var statusLabel = new Label
-            {
-                Text = _computer.Status.Replace("_", " ").ToUpper(),
-                Font = new Font("Segoe UI", 9, FontStyle.Bold),
-                ForeColor = Color.FromArgb(220, 255, 220),
-                AutoSize = false,
-                Width = 250,
-                Height = 20,
-                Top = 55,
-                Left = 22,
-                BackColor = Color.Transparent,
-            };
-
-            header.Controls.Add(titleLabel);
-            header.Controls.Add(statusLabel);
-
-            // ── Body ──────────────────────────────────────────────────────────
-            var body = new Panel
+            var mainLayout = new TableLayoutPanel
             {
                 Dock = DockStyle.Fill,
                 Padding = new Padding(20),
-                BackColor = Color.Transparent,
+                ColumnCount = 1,
+                RowCount = 8, // Increased to 8 to fit the new quick-add row
+                BackColor = Color.Transparent
             };
+            mainLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
 
-            int y = 16;
+            // [Row 0] Title
+            lblTitle = new Label { Text = $"{_computer.Name} Control Panel", Font = new Font("Segoe UI", 14, FontStyle.Bold), ForeColor = Color.White, Dock = DockStyle.Fill, TextAlign = ContentAlignment.MiddleLeft };
+            mainLayout.Controls.Add(lblTitle, 0, 0);
 
-            if (_computer.Status == "in_use" || _computer.Status == "reserved")
+            // [Row 1] Status
+            string displayStatus = _computer.Status == "in_use" ? "IN USE" : _computer.Status.ToUpper();
+            lblStatus = new Label { Text = $"Current Status: {displayStatus}", Font = new Font("Segoe UI", 9), ForeColor = Color.FromArgb(148, 163, 184), Dock = DockStyle.Fill };
+            mainLayout.Controls.Add(lblStatus, 0, 1);
+
+            // [Row 2] Member Dropdown
+            memberCombo = new ComboBox { Dock = DockStyle.Top, DropDownStyle = ComboBoxStyle.DropDownList, BackColor = Color.FromArgb(30, 41, 59), ForeColor = Color.White, FlatStyle = FlatStyle.Flat };
+            memberCombo.Items.Add("Loading members list...");
+            memberCombo.SelectedIndex = 0;
+            memberCombo.Enabled = false;
+            memberCombo.SelectedIndexChanged += MemberCombo_SelectedIndexChanged;
+            var memberPanel = new Panel { Dock = DockStyle.Fill, Height = 55 };
+            memberPanel.Controls.Add(new Label { Text = "Select Member Profile:", ForeColor = Color.White, Dock = DockStyle.Top });
+            memberPanel.Controls.Add(memberCombo);
+            mainLayout.Controls.Add(memberPanel, 0, 2);
+
+            // [Row 3] Balance
+            lblRunningBalance = new Label { Text = "No profile balance loaded.", Font = new Font("Segoe UI", 9, FontStyle.Italic), ForeColor = Color.FromArgb(34, 197, 94), Dock = DockStyle.Fill, Visible = false };
+            mainLayout.Controls.Add(lblRunningBalance, 0, 3);
+
+            // [Row 4] Name Input
+            nameInput = new TextBox { Dock = DockStyle.Top, BackColor = Color.FromArgb(30, 41, 59), ForeColor = Color.White, BorderStyle = BorderStyle.FixedSingle };
+            var namePanel = new Panel { Dock = DockStyle.Fill, Height = 55 };
+            namePanel.Controls.Add(new Label { Text = "Customer Name:", ForeColor = Color.White, Dock = DockStyle.Top });
+            namePanel.Controls.Add(nameInput);
+            mainLayout.Controls.Add(namePanel, 0, 4);
+
+            // [Row 5] Time Input
+            txtTimeInput = new TextBox { Dock = DockStyle.Top, BackColor = Color.FromArgb(30, 41, 59), ForeColor = Color.White, Text = "0" };
+            var timePanel = new Panel { Dock = DockStyle.Fill, Height = 55 };
+            timePanel.Controls.Add(new Label { Text = "Duration (Hours):", ForeColor = Color.White, Dock = DockStyle.Top });
+            timePanel.Controls.Add(txtTimeInput);
+            mainLayout.Controls.Add(timePanel, 0, 5);
+
+            // [Row 6] Quick Add Buttons (New Integration)
+            mainLayout.Controls.Add(CreateQuickButtonPanel(), 0, 6);
+
+            // [Row 7] Bottom Action Buttons
+            var buttonPanel = new FlowLayoutPanel { Dock = DockStyle.Fill, FlowDirection = FlowDirection.RightToLeft };
+            btnCancel = new Button { Text = "Cancel", DialogResult = DialogResult.Cancel, Size = new Size(70, 32), BackColor = Color.FromArgb(71, 85, 105), ForeColor = Color.White, FlatStyle = FlatStyle.Flat };
+            btnAction = new Button { Size = new Size(110, 32), BackColor = Color.FromArgb(34, 197, 94), ForeColor = Color.White, FlatStyle = FlatStyle.Flat };
+            btnReserve = new Button { Size = new Size(95, 32), Visible = false, FlatStyle = FlatStyle.Flat };
+            btnStop = new Button { Text = "Stop", Size = new Size(95, 32), Visible = false, BackColor = Color.FromArgb(220, 38, 38), ForeColor = Color.White, FlatStyle = FlatStyle.Flat };
+            btnStop.Click += (s, e) => HandleSubmit(Action.StopTime);
+            btnExtend = new Button { Text = "Extend", Size = new Size(95, 32), Visible = false, BackColor = Color.FromArgb(79, 70, 229), ForeColor = Color.White, FlatStyle = FlatStyle.Flat };
+
+            buttonPanel.Controls.AddRange(new Control[] { btnExtend, btnStop, btnReserve, btnAction, btnCancel });
+            mainLayout.Controls.Add(buttonPanel, 0, 7);
+
+            SetupActionButtonState();
+            this.Controls.Add(mainLayout);
+        }
+
+        private FlowLayoutPanel CreateQuickButtonPanel()
+        {
+            var btnPanel = new FlowLayoutPanel { Dock = DockStyle.Fill, FlowDirection = FlowDirection.LeftToRight, Height = 40 };
+
+            Button CreateBtn(string text, int minutes)
             {
-                AddInfo(body, "Customer:", _computer.CurrentCustomer ?? "—", ref y);
+                var btn = new Button { Text = text, Width = 80, Height = 30, BackColor = _blue, ForeColor = Color.White, FlatStyle = FlatStyle.Flat };
+                btn.Click += (s, e) => {
+                    if (double.TryParse(txtTimeInput.Text, out double cur))
+                        txtTimeInput.Text = Math.Round(cur + (minutes / 60.0), 2).ToString();
+                };
+                return btn;
+            }
 
-                if (_computer.SessionStart.HasValue && _computer.Status == "in_use")
+            btnPanel.Controls.Add(CreateBtn("+30m", 30));
+            btnPanel.Controls.Add(CreateBtn("+1h", 60));
+            btnPanel.Controls.Add(CreateBtn("+2h", 120));
+            return btnPanel;
+        }
+
+        private void SetupActionButtonState()
+        {
+            if (_computer.Status == "available")
+            {
+                btnAction.Text = "Start Session";
+                btnAction.BackColor = Color.FromArgb(34, 197, 94);
+                btnAction.Click += (s, e) => HandleSubmit(Action.Start);
+
+                btnReserve.Text = "Reserve PC";
+                btnReserve.BackColor = Color.FromArgb(234, 179, 8);
+                btnReserve.Visible = true;
+                btnReserve.Click += (s, e) => HandleSubmit(Action.Reserve);
+            }
+            else if (_computer.Status == "in_use")
+            {
+                btnAction.Text = "Close Panel";
+                btnAction.BackColor = Color.FromArgb(71, 85, 105);
+                btnAction.Click += (s, e) => this.Close();
+
+                btnStop.Visible = true;
+                btnExtend.Visible = true;
+                txtTimeInput.Enabled = false;
+            }
+            else if (_computer.Status == "reserved")
+            {
+                btnAction.Text = "Claim & Start";
+                btnAction.BackColor = Color.FromArgb(34, 197, 94);
+                btnAction.Click += (s, e) => HandleSubmit(Action.Start);
+
+                btnReserve.Text = "Release";
+                btnReserve.BackColor = Color.FromArgb(148, 163, 184);
+                btnReserve.Visible = true;
+                btnReserve.Click += (s, e) => HandleSubmit(Action.Free);
+            }
+        }
+
+        private async void SessionModal_Load(object sender, EventArgs e)
+        {
+            if (_computer.Status == "reserved" || _computer.Status == "in_use")
+            {
+                // ... (existing logic for when a PC is already occupied)
+                return;
+            }
+
+            try
+            {
+                // Fetch all members AND all computers (to check who is active)
+                var allMembers = await SupabaseService.GetMembersAsync();
+                var allComputers = await SupabaseService.GetComputersAsync(); // Ensure this method exists
+
+                //  Identify names of members currently active
+                var activeCustomerNames = allComputers
+                    .Where(c => c.Status == "in_use" && !string.IsNullOrEmpty(c.CurrentCustomer))
+                    .Select(c => c.CurrentCustomer)
+                    .ToList();
+
+                memberCombo.Items.Clear();
+                memberCombo.Items.Add("— Walk-in / Guest Account —");
+
+                // Populate combo only with members NOT in the active list
+                foreach (var m in allMembers)
                 {
-                    var elapsed = DateTime.UtcNow - _computer.SessionStart.Value;
-                    AddInfo(body, "Time Used:",
-                        string.Format("{0}h {1}m", (int)elapsed.TotalHours, elapsed.Minutes),
-                        ref y);
-
-                    decimal charge = Math.Round((decimal)elapsed.TotalHours * _computer.HourlyRate, 2);
-                    AddInfo(body, "Current Charge:",
-                        string.Format("₱{0:F2}  (₱{1}/hr)", charge, _computer.HourlyRate),
-                        ref y);
+                    // Assuming m.FullName matches the string stored in computer.CurrentCustomer
+                    if (!activeCustomerNames.Contains(m.FullName))
+                    {
+                        _members.Add(m); // Keep track of only available members
+                        memberCombo.Items.Add($"👤 {m.FullName} (@{m.Username})");
+                    }
                 }
+
+                memberCombo.SelectedIndex = 0;
+                memberCombo.Enabled = true;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error loading members: " + ex.Message);
+            }
+        }
+
+        // Update the selection changed handler to use your corrected property
+        private void MemberCombo_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (memberCombo.SelectedIndex > 0 && _members.Count >= memberCombo.SelectedIndex)
+            {
+                var m = _members[memberCombo.SelectedIndex - 1];
+                nameInput.Text = m.FullName;
+                SelectedMemberId = m.Id.ToString();
+
+                // CORRECTED: Use TimeBalanceSeconds (int) instead of TotalSecondsUsed
+                if (m.TimeBalanceSeconds > 0)
+                {
+                    double unspentHours = m.TimeBalanceSeconds / 3600.0;
+                    lblRunningBalance.Text = $"✨ Has saved time balance left: {Math.Round(unspentHours, 2)} hrs remaining.";
+                    txtTimeInput.Text = Math.Round(unspentHours, 2).ToString();
+                }
+                else
+                {
+                    lblRunningBalance.Text = "Profile loaded. No saved time tokens on record.";
+                    txtTimeInput.Text = "0";
+                }
+                lblRunningBalance.Visible = true;
+            }
+        }
+
+        private void HandleSubmit(Action action)
+        {
+            if ((action == Action.Start || action == Action.Reserve) && string.IsNullOrWhiteSpace(CustomerName))
+            {
+                MessageBox.Show("Please define a valid customer descriptor reference.", "Validation Note", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
             }
 
-            AddInfo(body, "Rate:", string.Format("₱{0}/hour", _computer.HourlyRate), ref y);
-            y += 12;
-
-            // ── Customer name input (available only) ──────────────────────────
-            TextBox nameInput = null;
-
-            if (_computer.Status == "available")
+            if (double.TryParse(txtTimeInput.Text.Trim(), out double parsedVal) && parsedVal > 0)
             {
-                var nameLabel = new Label
-                {
-                    Text = "Customer Name:",
-                    Font = new Font("Segoe UI", 9, FontStyle.Bold),
-                    ForeColor = Color.FromArgb(148, 163, 184),
-                    Left = 20,
-                    Top = y,
-                    Width = 200,
-                    Height = 20,
-                    BackColor = Color.Transparent,
-                };
-
-                nameInput = new TextBox
-                {
-                    Left = 20,
-                    Top = y + 24,
-                    Width = 360,
-                    Height = 36,
-                    Font = new Font("Segoe UI", 11),
-                    BackColor = Color.FromArgb(30, 41, 59),
-                    ForeColor = Color.White,
-                    BorderStyle = BorderStyle.FixedSingle,
-                };
-
-                body.Controls.Add(nameLabel);
-                body.Controls.Add(nameInput);
-                y += 76;
+                SelectedHours = parsedVal;
+            }
+            else
+            {
+                SelectedHours = -1;
             }
 
-            // ── Buttons ───────────────────────────────────────────────────────
-            var btnPanel = new FlowLayoutPanel
+            SelectedAction = action;
+            this.DialogResult = DialogResult.OK;
+            this.Close();
+        }
+
+        // Standard custom prompt dialog layout to replace VisualBasic interactions cleanly
+        private string PromptExtensionDialog(string title, string instructionText)
+        {
+            Form prompt = new Form()
             {
-                Left = 40,
-                Top = y + 12,
-                Width = 370,
-                Height = 54,
-                FlowDirection = FlowDirection.LeftToRight,
-                WrapContents = false,
-                BackColor = Color.Transparent,
+                Width = 360,
+                Height = 170,
+                FormBorderStyle = FormBorderStyle.FixedDialog,
+                Text = title,
+                StartPosition = FormStartPosition.CenterParent,
+                BackColor = Color.FromArgb(15, 23, 42),
+                MaximizeBox = false,
+                MinimizeBox = false
             };
 
-            if (_computer.Status == "available")
+            Label textLabel = new Label() { Left = 20, Top = 15, Text = instructionText, Width = 310, ForeColor = Color.White, Font = new Font("Segoe UI", 9) };
+            TextBox textBox = new TextBox() { Left = 20, Top = 45, Width = 300, Text = "1", Font = new Font("Segoe UI", 10), BackColor = Color.FromArgb(30, 41, 59), ForeColor = Color.White, BorderStyle = BorderStyle.FixedSingle };
+
+            Button confirmation = new Button() { Text = "Confirm", Left = 130, Width = 90, Top = 85, Height = 30, DialogResult = DialogResult.OK, FlatStyle = FlatStyle.Flat, ForeColor = Color.White, BackColor = Color.FromArgb(79, 70, 229) };
+            Button cancelation = new Button() { Text = "Cancel", Left = 230, Width = 90, Top = 85, Height = 30, DialogResult = DialogResult.Cancel, FlatStyle = FlatStyle.Flat, ForeColor = Color.White, BackColor = Color.FromArgb(71, 85, 105) };
+
+            confirmation.FlatAppearance.BorderSize = 0;
+            cancelation.FlatAppearance.BorderSize = 0;
+
+            prompt.Controls.Add(textBox);
+            prompt.Controls.Add(textLabel);
+            prompt.Controls.Add(confirmation);
+            prompt.Controls.Add(cancelation);
+            prompt.AcceptButton = confirmation;
+            prompt.CancelButton = cancelation;
+
+            return prompt.ShowDialog() == DialogResult.OK ? textBox.Text : "";
+        }
+        // Inside your SessionModal constructor or Layout method
+        private void AddQuickTimeControls()
+        {
+            var btnPanel = new FlowLayoutPanel { Top = 200, Left = 20, Width = 300, Height = 50 };
+
+            // Helper to create buttons
+            Button CreateQuickBtn(string text, int minutes)
             {
-                var startBtn = MakeBtn("▶  Start Session", Color.FromArgb(0, 122, 204));
-                startBtn.Click += (s, e) =>
-                {
-                    if (nameInput == null || string.IsNullOrWhiteSpace(nameInput.Text))
+                var btn = new Button { Text = text, Width = 80, Height = 30, BackColor = _blue, ForeColor = Color.White };
+                // Change inside your CreateQuickBtn method:
+                btn.Click += (s, e) => {
+                    if (double.TryParse(txtTimeInput.Text, out double currentHours))
                     {
-                        MessageBox.Show("Enter customer name first.", "Required",
-                            MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                        return;
-                    }
-                    CustomerName = nameInput.Text.Trim();
-                    SelectedAction = Action.Start;
-                    DialogResult = DialogResult.OK;
-                };
-
-                var reserveBtn = MakeBtn("📌 Reserve", Color.FromArgb(133, 83, 0));
-                reserveBtn.Click += (s, e) =>
-                {
-                    if (nameInput == null || string.IsNullOrWhiteSpace(nameInput.Text))
-                    {
-                        MessageBox.Show("Enter customer name first.", "Required",
-                            MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                        return;
-                    }
-                    CustomerName = nameInput.Text.Trim();
-                    SelectedAction = Action.Reserve;
-                    DialogResult = DialogResult.OK;
-                };
-
-                btnPanel.Controls.Add(startBtn);
-                btnPanel.Controls.Add(reserveBtn);
-            }
-
-            if (_computer.Status == "in_use")
-            {
-                var endBtn = MakeBtn("⏹  End Session", Color.FromArgb(186, 26, 26));
-                endBtn.Click += (s, e) =>
-                {
-                    var confirm = MessageBox.Show(
-                        string.Format("End session for {0}?", _computer.CurrentCustomer),
-                        "Confirm", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
-                    if (confirm == DialogResult.Yes)
-                    {
-                        SelectedAction = Action.End;
-                        DialogResult = DialogResult.OK;
+                        double addedHours = minutes / 60.0;
+                        txtTimeInput.Text = Math.Round(currentHours + addedHours, 2).ToString();
                     }
                 };
-                btnPanel.Controls.Add(endBtn);
+                return btn;
             }
 
-            if (_computer.Status == "reserved")
-            {
-                var startBtn = MakeBtn("▶  Start Session", Color.FromArgb(0, 122, 204));
-                startBtn.Click += (s, e) =>
-                {
-                    CustomerName = _computer.CurrentCustomer ?? "";
-                    SelectedAction = Action.Start;
-                    DialogResult = DialogResult.OK;
-                };
+            btnPanel.Controls.Add(CreateQuickBtn("+30m", 30));
+            btnPanel.Controls.Add(CreateQuickBtn("+1h", 60));
+            btnPanel.Controls.Add(CreateQuickBtn("+2h", 120));
 
-                var cancelBtn = MakeBtn("✕  Cancel Reserve", Color.FromArgb(100, 116, 139));
-                cancelBtn.Click += (s, e) =>
-                {
-                    SelectedAction = Action.Free;
-                    DialogResult = DialogResult.OK;
-                };
-
-                btnPanel.Controls.Add(startBtn);
-                btnPanel.Controls.Add(cancelBtn);
-            }
-
-            //var closeBtn = MakeBtn("Close", Color.FromArgb(51, 65, 85), Color.FromArgb(148, 163, 184));
-            //closeBtn.Click += (s, e) => DialogResult = DialogResult.Cancel;
-            //btnPanel.Controls.Add(closeBtn);
-           
-
-            body.Controls.Add(btnPanel);
-            Controls.Add(body);
-            Controls.Add(header);
-        }
-
-        // ── Helpers ───────────────────────────────────────────────────────────
-        private void AddInfo(Panel parent, string label, string value, ref int y)
-        {
-            parent.Controls.Add(new Label
-            {
-                Text = label,
-                Font = new Font("Segoe UI", 9, FontStyle.Bold),
-                ForeColor = Color.FromArgb(100, 116, 139),
-                Left = 0,
-                Top = y,
-                Width = 140,
-                Height = 22,
-                BackColor = Color.Transparent,
-            });
-            parent.Controls.Add(new Label
-            {
-                Text = value,
-                Font = new Font("Segoe UI", 10),
-                ForeColor = Color.White,
-                Left = 145,
-                Top = y,
-                Width = 220,
-                Height = 22,
-                BackColor = Color.Transparent,
-            });
-            y += 30;
-        }
-
-        private Button MakeBtn(string text, Color bg, Color fg = default(Color))
-        {
-            if (fg == default(Color)) fg = Color.White;
-
-            var btn = new Button
-            {
-                Text = text,
-                BackColor = bg,
-                ForeColor = fg,
-                FlatStyle = FlatStyle.Flat,
-                Font = new Font("Segoe UI", 9, FontStyle.Bold),
-                Height = 40,
-                Width = text.Length * 8 + 24,
-                Margin = new Padding(0, 0, 8, 0),
-                Cursor = Cursors.Hand,
-            };
-            btn.FlatAppearance.BorderSize = 0;
-            return btn;
-        }
-
-        private Color StatusColor(string status)
-        {
-            switch (status)
-            {
-                case "in_use": return Color.FromArgb(186, 26, 26);
-                case "reserved": return Color.FromArgb(133, 83, 0);
-                default: return Color.FromArgb(0, 100, 60);
-            }
-        }
-
-        private void InitializeComponent()
-        {
-            this.SuspendLayout();
-            // 
-            // SessionModal
-            // 
-            this.ClientSize = new System.Drawing.Size(367, 357);
-            this.Name = "SessionModal";
-            this.Padding = new System.Windows.Forms.Padding(5);
-            this.Load += new System.EventHandler(this.SessionModal_Load);
-            this.ResumeLayout(false);
-
-        }
-
-        private void SessionModal_Load(object sender, EventArgs e)
-        {
-
+            this.Controls.Add(btnPanel);
         }
     }
 }

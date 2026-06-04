@@ -11,6 +11,7 @@ namespace computerShop
     {
         private Button _activeBtn = null;
         private DashboardPanel _dashboardPanel = null;
+        private MembersPanel _membersPanel = null;
 
         private readonly Color _activeBg = Color.FromArgb(100, 116, 139);
         private readonly Color _hoverBg = Color.FromArgb(100, 116, 139);
@@ -23,67 +24,202 @@ namespace computerShop
 
         private async void Form1_Load(object sender, EventArgs e)
         {
-            // Rounded nav buttons + sidebar border
             UiHelper.MakeRounded(DashboardBTN, 20);
             UiHelper.MakeRounded(membersBTN, 20);
             UiHelper.AddRightBorder(left_navigation,
                 color: Color.FromArgb(0, 122, 204), thickness: 2);
 
-            // Hover effects
             WireNavButton(DashboardBTN);
             WireNavButton(membersBTN);
 
-            // Build dashboard panel
             _dashboardPanel = new DashboardPanel();
 
-            _dashboardPanel.ComputerCardClicked += async (pc) =>
+            _dashboardPanel.ComputerCardClicked += (pc) =>
             {
-                // ✅ C# 7.3: use regular using block, not using declaration
-                using (var modal = new SessionModal(pc))
+                _dashboardPanel.StopLiveUpdates();
+
+                this.BeginInvoke((Action)(() =>
                 {
-                    var result = modal.ShowDialog(this);
-
-                    if (result == DialogResult.OK)
+                    using (var modal = new SessionModal(pc))
                     {
-                        try
-                        {
-                            switch (modal.SelectedAction)
-                            {
-                                case SessionModal.Action.Start:
-                                    await SupabaseService.StartSessionAsync(pc.Id, modal.CustomerName);
-                                    break;
-                                case SessionModal.Action.End:
-                                    await SupabaseService.EndSessionAsync(pc);
-                                    break;
-                                case SessionModal.Action.Reserve:
-                                    await SupabaseService.ReserveAsync(pc.Id, modal.CustomerName);
-                                    break;
-                                case SessionModal.Action.Free:
-                                    await SupabaseService.FreeComputerAsync(pc.Id);
-                                    break;
-                            }
+                        modal.StartPosition = FormStartPosition.CenterParent;
+                        var result = modal.ShowDialog(this);
 
-                            await RefreshDashboardAsync();
-                        }
-                        catch (Exception ex)
+                        if (result == DialogResult.OK)
                         {
-                            MessageBox.Show("Error: " + ex.Message, "Failed",
-                                MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            Task.Run(async () =>
+                            {
+                                try
+                                {
+                                    // Generate the custom string label to save how much time they requested
+                                    string limitNotes = modal.SelectedHours > 0 ? $"LIMIT:{modal.SelectedHours}" : "OPEN";
+
+                                    switch (modal.SelectedAction)
+                                    {
+                                        case SessionModal.Action.Start:
+                                            // Start active session & record the time limitation constraint
+                                            await SupabaseService.StartSessionAsync(pc.Id, modal.CustomerName);
+                                            await SupabaseService.UpdateComputerNotesAsync(pc.Id, limitNotes);
+
+                                            if (modal.SelectedMemberId != null)
+                                            {
+                                                await SupabaseService.StartMemberSessionAsync(modal.SelectedMemberId, pc.Id);
+                                                // Deduct/clear their saved balance wallet now that it is running live on the PC
+                                                await SupabaseService.UpdateMemberBalanceAsync(modal.SelectedMemberId, 0);
+                                            }
+                                            break;
+
+                                        case SessionModal.Action.Reserve:
+                                            // Lock computer status to 'reserved' and hold it with their timeframe target
+                                            await SupabaseService.ReserveAsync(pc.Id, modal.CustomerName);
+                                            await SupabaseService.UpdateComputerNotesAsync(pc.Id, limitNotes);
+                                            break;
+
+                                        case SessionModal.Action.ExtendOnly:
+                                            // EXTEND TIME: Pull current limit value, increment it, and append it back to Supabase notes
+                                            if (!string.IsNullOrEmpty(pc.Notes) && pc.Notes.StartsWith("LIMIT:"))
+                                            {
+                                                if (double.TryParse(pc.Notes.Replace("LIMIT:", ""), out double activeLimit))
+                                                {
+                                                    double newLimit = activeLimit + modal.ExtendedHours;
+                                                    await SupabaseService.UpdateComputerNotesAsync(pc.Id, $"LIMIT:{newLimit}");
+                                                    MessageBox.Show($"Successfully extended user session by +{modal.ExtendedHours} hours!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                                                }
+                                            }
+                                            break;
+
+                                        case SessionModal.Action.StopTime:
+                                            // STOP TIME: Pause session context, save what is left to their wallet, and free the PC
+                                            await PauseSessionWithMemberSave(pc);
+                                            break;
+
+                                        case SessionModal.Action.End:
+                                            // END SESSION: Terminate session explicitly and capture any remaining balance tracking offsets
+                                            await EndSessionWithMemberSave(pc);
+                                            break;
+
+                                        case SessionModal.Action.Free:
+                                            // Clear out the reservation details and wipe the timer constraints string clean
+                                            await SupabaseService.FreeComputerAsync(pc.Id);
+                                            await SupabaseService.UpdateComputerNotesAsync(pc.Id, "");
+                                            break;
+                                    }
+
+                                    this.BeginInvoke((Action)(async () =>
+                                    {
+                                        await RefreshDashboardAsync();
+                                        _dashboardPanel.StartLiveUpdates();
+                                    }));
+                                }
+                                catch (Exception ex)
+                                {
+                                    this.BeginInvoke((Action)(() =>
+                                    {
+                                        MessageBox.Show("Database update error: " + ex.Message, "Error",
+                                            MessageBoxButtons.OK, MessageBoxIcon.Error);
+                                        _dashboardPanel.StartLiveUpdates();
+                                    }));
+                                }
+                            });
+                        }
+                        else
+                        {
+                            _dashboardPanel.StartLiveUpdates();
                         }
                     }
-                }
+                }));
             };
 
-  
             main.Controls.Add(_dashboardPanel, 0, 0);
             main.SetRowSpan(_dashboardPanel, 2);
 
-      
+            _membersPanel = new MembersPanel();
+            _membersPanel.Visible = false;
+            main.Controls.Add(_membersPanel, 0, 0);
+            main.SetRowSpan(_membersPanel, 2);
+
             SetActive(DashboardBTN);
             await RefreshDashboardAsync();
         }
 
-        // ── Fetch computers and push to dashboard ─────────────────────────────
+        // ── End session + save time to member if one was using it ─────────────
+        private async Task EndSessionWithMemberSave(Computer pc)
+        {
+            // Find the computer's active customer in the members list to save their time
+            var members = await SupabaseService.GetMembersAsync();
+            var member = members.Find(m => m.FullName == pc.CurrentCustomer);
+
+            if (member != null && pc.SessionStart.HasValue)
+            {
+                // Calculate unspent time based on notes limit
+                if (!string.IsNullOrEmpty(pc.Notes) && pc.Notes.StartsWith("LIMIT:"))
+                {
+                    if (double.TryParse(pc.Notes.Replace("LIMIT:", ""), out double totalAllowedHours))
+                    {
+                        TimeSpan elapsed = DateTime.UtcNow - pc.SessionStart.Value;
+                        double unspentHoursLeft = totalAllowedHours - elapsed.TotalHours;
+
+                        if (unspentHoursLeft > 0.01)
+                        {
+                            int secondsRemainingTotal = (int)(unspentHoursLeft * 3600);
+                            await SupabaseService.UpdateMemberBalanceAsync(member.Id, secondsRemainingTotal);
+                        }
+                    }
+                }
+            }
+
+            await SupabaseService.FreeComputerAsync(pc.Id);
+            await SupabaseService.UpdateComputerNotesAsync(pc.Id, "");
+        }
+
+        // ── Pause: save time to member account, free the computer ─────────────
+        private async Task PauseSessionWithMemberSave(Computer pc)
+        {
+            var members = await SupabaseService.GetMembersAsync();
+            var member = members.Find(m => m.FullName == pc.CurrentCustomer);
+
+            if (member != null && pc.SessionStart.HasValue)
+            {
+                int secondsRemainingTotal = 0;
+
+                if (!string.IsNullOrEmpty(pc.Notes) && pc.Notes.StartsWith("LIMIT:"))
+                {
+                    if (double.TryParse(pc.Notes.Replace("LIMIT:", ""), out double totalAllowedHours))
+                    {
+                        TimeSpan elapsed = DateTime.UtcNow - pc.SessionStart.Value;
+                        double unspentHoursLeft = totalAllowedHours - elapsed.TotalHours;
+                        if (unspentHoursLeft > 0)
+                        {
+                            secondsRemainingTotal = (int)(unspentHoursLeft * 3600);
+                        }
+                    }
+                }
+
+                // Save leftover time tokens to the member's wallet balance
+                await SupabaseService.UpdateMemberBalanceAsync(member.Id, secondsRemainingTotal);
+
+                // Format into a human-readable string display
+                var h = secondsRemainingTotal / 3600;
+                var m = (secondsRemainingTotal % 3600) / 60;
+                string readableTime = h > 0 ? $"{h}h {m}m" : $"{m}m";
+
+                MessageBox.Show(
+                    $"Session stopped early!\nTime balance saved to {pc.CurrentCustomer}'s account.\n" +
+                    $"Total saved remaining balance: {readableTime}",
+                    "Time Stopped", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+            else
+            {
+                MessageBox.Show(
+                    "Session ended (guest — no profile balance adjustments applied).",
+                    "Info", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+
+            await SupabaseService.FreeComputerAsync(pc.Id);
+            await SupabaseService.UpdateComputerNotesAsync(pc.Id, "");
+        }
+
+        // ── Fetch computers ───────────────────────────────────────────────────
         private async Task RefreshDashboardAsync()
         {
             try
@@ -103,13 +239,11 @@ namespace computerShop
         {
             btn.MouseEnter += (s, e) =>
             {
-                if (btn != _activeBtn)
-                    btn.BackColor = _hoverBg;
+                if (btn != _activeBtn) btn.BackColor = _hoverBg;
             };
             btn.MouseLeave += (s, e) =>
             {
-                if (btn != _activeBtn)
-                    btn.BackColor = _defaultBg;
+                if (btn != _activeBtn) btn.BackColor = _defaultBg;
             };
         }
 
@@ -130,13 +264,15 @@ namespace computerShop
         {
             SetActive(DashboardBTN);
             _dashboardPanel.Visible = true;
+            _membersPanel.Visible = false;
         }
 
-        private void membersBTN_Click(object sender, EventArgs e)
+        private async void membersBTN_Click(object sender, EventArgs e)
         {
             SetActive(membersBTN);
             _dashboardPanel.Visible = false;
-            // show members panel here when ready
+            _membersPanel.Visible = true;
+            await _membersPanel.LoadMembersAsync();
         }
 
         private void body_Paint(object sender, PaintEventArgs e) { }

@@ -1,4 +1,6 @@
-﻿namespace computerShop
+﻿using System;
+
+namespace computerShop
 {
     partial class Form1
     {
@@ -22,6 +24,7 @@
             this.DashboardBTN = new System.Windows.Forms.Button();
             this.membersBTN = new System.Windows.Forms.Button();
             this.main = new System.Windows.Forms.TableLayoutPanel();
+            this.ComputersBTN = new System.Windows.Forms.Button();
             this.body.SuspendLayout();
             this.left_navigation.SuspendLayout();
             this.SuspendLayout();
@@ -52,15 +55,17 @@
             this.left_navigation.Controls.Add(this.label1, 0, 0);
             this.left_navigation.Controls.Add(this.DashboardBTN, 0, 1);
             this.left_navigation.Controls.Add(this.membersBTN, 0, 2);
+            this.left_navigation.Controls.Add(this.ComputersBTN, 0, 3);
             this.left_navigation.Dock = System.Windows.Forms.DockStyle.Fill;
             this.left_navigation.Location = new System.Drawing.Point(0, 0);
             this.left_navigation.Margin = new System.Windows.Forms.Padding(0);
             this.left_navigation.Name = "left_navigation";
-            this.left_navigation.RowCount = 4;
+            this.left_navigation.RowCount = 5;
             this.left_navigation.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 70F));
             this.left_navigation.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 60F));
             this.left_navigation.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 60F));
-            this.left_navigation.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.left_navigation.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 60F));
+            this.left_navigation.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
             this.left_navigation.Size = new System.Drawing.Size(233, 535);
             this.left_navigation.TabIndex = 0;
             // 
@@ -133,6 +138,17 @@
             this.main.Size = new System.Drawing.Size(793, 535);
             this.main.TabIndex = 1;
             // 
+            // ComputersBTN
+            // 
+            this.ComputersBTN.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.ComputersBTN.Location = new System.Drawing.Point(0, 190);
+            this.ComputersBTN.Margin = new System.Windows.Forms.Padding(0);
+            this.ComputersBTN.Name = "ComputersBTN";
+            this.ComputersBTN.Size = new System.Drawing.Size(233, 60);
+            this.ComputersBTN.TabIndex = 3;
+            this.ComputersBTN.Text = "button1";
+            this.ComputersBTN.UseVisualStyleBackColor = true;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -150,6 +166,11 @@
 
         }
 
+        private void membersBTN_ClickAsync(object sender, EventArgs e)
+        {
+
+        }
+
         #endregion
 
         private System.Windows.Forms.TableLayoutPanel body;
@@ -158,5 +179,6 @@
         private System.Windows.Forms.Button membersBTN;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.TableLayoutPanel main;
+        private System.Windows.Forms.Button ComputersBTN;
     }
 }
