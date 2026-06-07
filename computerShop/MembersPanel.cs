@@ -14,6 +14,7 @@ namespace computerShop
         private FlowLayoutPanel _memberGrid;
         private Label _totalLabel;
         private System.Windows.Forms.Timer _timer;
+        private Employee _currentEmployee;
 
         // Colors
         private readonly Color _bg = Color.FromArgb(15, 23, 42);
@@ -22,8 +23,10 @@ namespace computerShop
         private readonly Color _green = Color.FromArgb(34, 197, 94);
         private readonly Color _muted = Color.FromArgb(148, 163, 184);
 
-        public MembersPanel()
+        public MembersPanel(Employee employee)
         {
+            _currentEmployee = employee;
+
             Dock = DockStyle.Fill;
             BackColor = _bg;
             Padding = new Padding(24);
@@ -37,25 +40,66 @@ namespace computerShop
 
         private void BuildLayout()
         {
-            var stack = new TableLayoutPanel { Dock = DockStyle.Fill, ColumnCount = 1, RowCount = 4, BackColor = Color.Transparent };
+            var stack = new TableLayoutPanel
+            {
+                Dock = DockStyle.Fill,
+                ColumnCount = 1,
+                RowCount = 4,
+                BackColor = Color.Transparent
+            };
             stack.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
             stack.RowStyles.Add(new RowStyle(SizeType.Absolute, 40F));
             stack.RowStyles.Add(new RowStyle(SizeType.Absolute, 60F));
             stack.RowStyles.Add(new RowStyle(SizeType.Absolute, 50F));
             stack.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
 
-            var title = new Label { Text = "Members", Font = new Font("Segoe UI", 16, FontStyle.Bold), ForeColor = Color.White, Dock = DockStyle.Fill, TextAlign = ContentAlignment.MiddleLeft };
+            // Title
+            var title = new Label
+            {
+                Text = "Members",
+                Font = new Font("Segoe UI", 16, FontStyle.Bold),
+                ForeColor = Color.White,
+                Dock = DockStyle.Fill,
+                TextAlign = ContentAlignment.MiddleLeft
+            };
             stack.Controls.Add(title, 0, 0);
 
-            var addBtn = new Button { Text = "+ Add New Member", Width = 180, Height = 40, BackColor = _blue, ForeColor = Color.White, FlatStyle = FlatStyle.Flat, Font = new Font("Segoe UI", 10, FontStyle.Bold), Cursor = Cursors.Hand, Margin = new Padding(0, 8, 0, 8) };
-            addBtn.FlatAppearance.BorderSize = 0;
-            addBtn.Click += (s, e) => OpenAddMemberDialog();
-            stack.Controls.Add(addBtn, 0, 1);
+            if (_currentEmployee?.Role == "admin")
+            {
+                var addBtn = new Button
+                {
+                    Text = "+ Add New Member",
+                    Width = 180,
+                    Height = 40,
+                    BackColor = _blue,
+                    ForeColor = Color.White,
+                    FlatStyle = FlatStyle.Flat,
+                    Font = new Font("Segoe UI", 10, FontStyle.Bold),
+                    Cursor = Cursors.Hand,
+                    Margin = new Padding(0, 8, 0, 8)
+                };
+                addBtn.FlatAppearance.BorderSize = 0;
+                addBtn.Click += (s, e) => OpenAddMemberDialog();
+                stack.Controls.Add(addBtn, 0, 1);
+            }
 
-            _totalLabel = new Label { Text = "Total Members: —", Font = new Font("Segoe UI", 10, FontStyle.Bold), ForeColor = _muted, AutoSize = true };
+            _totalLabel = new Label
+            {
+                Text = "Total Members: —",
+                Font = new Font("Segoe UI", 10, FontStyle.Bold),
+                ForeColor = _muted,
+                AutoSize = true
+            };
             stack.Controls.Add(_totalLabel, 0, 2);
 
-            _memberGrid = new FlowLayoutPanel { Dock = DockStyle.Fill, FlowDirection = FlowDirection.LeftToRight, WrapContents = true, AutoScroll = true, BackColor = Color.Transparent };
+            _memberGrid = new FlowLayoutPanel
+            {
+                Dock = DockStyle.Fill,
+                FlowDirection = FlowDirection.LeftToRight,
+                WrapContents = true,
+                AutoScroll = true,
+                BackColor = Color.Transparent
+            };
             stack.Controls.Add(_memberGrid, 0, 3);
 
             Controls.Add(stack);
@@ -63,7 +107,6 @@ namespace computerShop
 
         private void OpenAddMemberDialog()
         {
-            // 1. Setup Form with a cleaner look
             var form = new Form
             {
                 Text = "Register New Member",
@@ -75,10 +118,16 @@ namespace computerShop
                 MinimizeBox = false
             };
 
-            // 2. Add a Header Label
-            var header = new Label { Text = "Create New Account", Font = new Font("Segoe UI", 14, FontStyle.Bold), ForeColor = Color.White, Left = 20, Top = 20, Width = 300 };
+            var header = new Label
+            {
+                Text = "Create New Account",
+                Font = new Font("Segoe UI", 14, FontStyle.Bold),
+                ForeColor = Color.White,
+                Left = 20,
+                Top = 20,
+                Width = 300
+            };
 
-            // 3. Helper for clean, uniform textboxes
             TextBox CreateInput(int top) => new TextBox
             {
                 Left = 20,
@@ -91,31 +140,12 @@ namespace computerShop
                 Font = new Font("Segoe UI", 10)
             };
 
-            var lblName = new Label
-            {
-                Text = "Full Name",
-                ForeColor = _muted,
-                Left = 20,
-                Top = 60,
-                Font = new Font("Segoe UI", 8),
-                BackColor = Color.Transparent, 
-                AutoSize = true               
-            };
+            var lblName = new Label { Text = "Full Name", ForeColor = _muted, Left = 20, Top = 60, Font = new Font("Segoe UI", 8), BackColor = Color.Transparent, AutoSize = true };
             var nameBox = CreateInput(80);
 
-            var lblUser = new Label
-            {
-                Text = "Username",
-                ForeColor = _muted,
-                Left = 20,
-                Top = 130,
-                Font = new Font("Segoe UI", 8),
-                BackColor = Color.Transparent, 
-                AutoSize = true                
-            };
+            var lblUser = new Label { Text = "Username", ForeColor = _muted, Left = 20, Top = 130, Font = new Font("Segoe UI", 8), BackColor = Color.Transparent, AutoSize = true };
             var userBox = CreateInput(150);
 
-            // 4. Stylized Button
             var saveBtn = new Button
             {
                 Text = "Save Member",
@@ -131,16 +161,15 @@ namespace computerShop
             };
             saveBtn.FlatAppearance.BorderSize = 0;
 
-            saveBtn.Click += async (s, e) => {
+            saveBtn.Click += async (s, e) =>
+            {
                 if (string.IsNullOrWhiteSpace(nameBox.Text))
                 {
                     MessageBox.Show("Name is required.", "Validation", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     return;
                 }
-
                 saveBtn.Enabled = false;
                 saveBtn.Text = "Saving...";
-
                 await SupabaseService.AddMemberAsync(nameBox.Text, userBox.Text, "password");
                 form.Close();
                 await LoadMembersAsync();
@@ -155,7 +184,8 @@ namespace computerShop
             try
             {
                 var members = await SupabaseService.GetMembersAsync();
-                this.Invoke((Action)(() => {
+                this.Invoke((Action)(() =>
+                {
                     _totalLabel.Text = $"Total Members: {members.Count}";
                     RebuildGrid(members);
                 }));
@@ -167,7 +197,8 @@ namespace computerShop
         {
             _memberGrid.SuspendLayout();
             _memberGrid.Controls.Clear();
-            foreach (var m in members) _memberGrid.Controls.Add(MakeMemberCard(m));
+            foreach (var m in members)
+                _memberGrid.Controls.Add(MakeMemberCard(m));
             _memberGrid.ResumeLayout();
         }
 
@@ -175,17 +206,14 @@ namespace computerShop
         {
             var card = new Panel { Width = 200, Height = 140, Margin = new Padding(12), BackColor = _cardBg };
 
-            // Modern Top Border Strip
             var strip = new Panel { Height = 4, Dock = DockStyle.Top, BackColor = _blue };
-            card.Controls.Add(strip);
 
-            // Member Info
             var name = new Label
             {
                 Text = member.FullName,
                 Font = new Font("Segoe UI", 10, FontStyle.Bold),
                 ForeColor = Color.White,
-                Top = 30, // Adjusted top position since the button is gone
+                Top = 30,
                 Width = 200,
                 TextAlign = ContentAlignment.MiddleCenter
             };
@@ -195,19 +223,54 @@ namespace computerShop
                 Text = $"⏱ {Math.Round(member.TimeBalanceSeconds / 3600.0, 2)}h",
                 Font = new Font("Segoe UI", 9),
                 ForeColor = _green,
-                Top = 60, // Adjusted top position since the button is gone
+                Top = 60,
                 Width = 200,
                 TextAlign = ContentAlignment.MiddleCenter
             };
 
-            // Add only the label controls
-            card.Controls.AddRange(new Control[] { name, time });
+            card.Controls.AddRange(new Control[] { strip, name, time });
+
+            if (_currentEmployee?.Role == "admin")
+            {
+                var menu = new ContextMenuStrip();
+
+
+                // Add Delete Option
+                // Inside MakeMemberCard in MembersPanel.cs
+                menu.Items.Add("🗑 Delete Member", null, async (s, e) =>
+                {
+                    var confirm = MessageBox.Show($"Are you sure you want to delete {member.FullName}? This will also remove all their session history.",
+                        "Confirm Delete", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+
+                    if (confirm == DialogResult.Yes)
+                    {
+                        try
+                        {
+                            // Call the combined deletion service
+                            await SupabaseService.DeleteMemberAndSessionsAsync(member.Id);
+
+                            // Refresh the grid immediately
+                            await LoadMembersAsync();
+                        }
+                        catch (Exception ex)
+                        {
+                            MessageBox.Show($"Error deleting member: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        }
+                    }
+                });
+
+                card.ContextMenuStrip = menu;
+            }
 
             return card;
         }
 
-      
+       
 
-
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing) { _timer?.Stop(); _timer?.Dispose(); }
+            base.Dispose(disposing);
+        }
     }
 }

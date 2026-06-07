@@ -29,8 +29,17 @@ namespace computerShop
             BuildLayout();
 
             _timer = new System.Windows.Forms.Timer();
-            _timer.Interval = 1000;
-            _timer.Tick += (s, e) => UpdateTimerLabels();
+            _timer.Interval = 5000; // Refresh every 5 seconds
+            _timer.Tick += async (s, e) =>
+            {
+                try
+                {
+                    var freshComputers = await SupabaseService.GetComputersAsync();
+                    LoadComputers(freshComputers); // Update the grid
+                    UpdateTimerLabels();          // Update the session timers
+                }
+                catch { /* Silently handle errors so the timer keeps running */ }
+            };
             _timer.Start();
         }
 

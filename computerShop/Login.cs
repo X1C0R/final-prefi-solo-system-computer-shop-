@@ -31,7 +31,7 @@ namespace computerShop
 
             var pnl = new Panel { Dock = DockStyle.Fill, Padding = new Padding(30) };
 
-            var lblTitle = new Label { Text = "Welcome Back", Font = new Font("Segoe UI", 21, FontStyle.Bold), ForeColor = Color.White, AutoSize = true, Location = new Point(60, 30) };
+            var lblTitle = new Label { Text = "Welcome!!!!", Font = new Font("Segoe UI", 21, FontStyle.Bold), ForeColor = Color.White, AutoSize = true, Location = new Point(60, 30) };
 
             // Pass 'pnl' into the method so you can add controls to it directly
             txtUsername = CreateStyledTextBox(pnl, 140, "Username");
@@ -41,7 +41,7 @@ namespace computerShop
             btnLogin = new Button { Text = "Login", Size = new Size(270, 45), Location = new Point(30, 250), BackColor = Color.FromArgb(0, 122, 204), ForeColor = Color.White, FlatStyle = FlatStyle.Flat, Font = new Font("Segoe UI", 10, FontStyle.Bold) };
             btnLogin.FlatAppearance.BorderSize = 0;
             btnLogin.Click += BtnLogin_Click;
-
+            UiHelper.MakeRounded(btnLogin, 10);
             pnl.Controls.AddRange(new Control[] { lblTitle, txtUsername, txtPassword, btnLogin });
             this.Controls.Add(pnl);
         }

@@ -86,7 +86,7 @@ namespace computerShop
                 BackColor = Color.FromArgb(30, 41, 59),
                 ForeColor = Color.White
             };
-            cmbRole.Items.AddRange(new string[] { "staff", "admin" });
+            cmbRole.Items.AddRange(new string[] { "staff"});
             cmbRole.SelectedIndex = 0;
             this.Controls.AddRange(new Control[] { lblRole, cmbRole });
             currentY += 60;

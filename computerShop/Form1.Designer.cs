@@ -20,12 +20,13 @@ namespace computerShop
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
             this.body = new System.Windows.Forms.TableLayoutPanel();
             this.left_navigation = new System.Windows.Forms.TableLayoutPanel();
+            this.LogOutBTN = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
             this.DashboardBTN = new System.Windows.Forms.Button();
             this.membersBTN = new System.Windows.Forms.Button();
             this.EmployeeBTN = new System.Windows.Forms.Button();
+            this.ComputersBTN = new System.Windows.Forms.Button();
             this.main = new System.Windows.Forms.TableLayoutPanel();
-            this.LogOutBTN = new System.Windows.Forms.Button();
             this.body.SuspendLayout();
             this.left_navigation.SuspendLayout();
             this.SuspendLayout();
@@ -53,24 +54,41 @@ namespace computerShop
             this.left_navigation.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(15)))), ((int)(((byte)(23)))), ((int)(((byte)(42)))));
             this.left_navigation.ColumnCount = 1;
             this.left_navigation.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.left_navigation.Controls.Add(this.LogOutBTN, 0, 6);
             this.left_navigation.Controls.Add(this.label1, 0, 0);
             this.left_navigation.Controls.Add(this.DashboardBTN, 0, 1);
             this.left_navigation.Controls.Add(this.membersBTN, 0, 2);
             this.left_navigation.Controls.Add(this.EmployeeBTN, 0, 3);
-            this.left_navigation.Controls.Add(this.LogOutBTN, 0, 5);
+            this.left_navigation.Controls.Add(this.ComputersBTN, 0, 4);
             this.left_navigation.Dock = System.Windows.Forms.DockStyle.Fill;
             this.left_navigation.Location = new System.Drawing.Point(0, 0);
             this.left_navigation.Margin = new System.Windows.Forms.Padding(0);
             this.left_navigation.Name = "left_navigation";
-            this.left_navigation.RowCount = 6;
+            this.left_navigation.RowCount = 7;
             this.left_navigation.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 70F));
             this.left_navigation.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 60F));
             this.left_navigation.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 60F));
             this.left_navigation.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 60F));
-            this.left_navigation.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 225F));
-            this.left_navigation.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 8F));
+            this.left_navigation.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 55F));
+            this.left_navigation.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 165F));
+            this.left_navigation.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 65F));
             this.left_navigation.Size = new System.Drawing.Size(233, 535);
             this.left_navigation.TabIndex = 0;
+            // 
+            // LogOutBTN
+            // 
+            this.LogOutBTN.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.LogOutBTN.FlatAppearance.BorderSize = 0;
+            this.LogOutBTN.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.LogOutBTN.Font = new System.Drawing.Font("Lucida Sans", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LogOutBTN.ForeColor = System.Drawing.Color.White;
+            this.LogOutBTN.Location = new System.Drawing.Point(3, 473);
+            this.LogOutBTN.Name = "LogOutBTN";
+            this.LogOutBTN.Size = new System.Drawing.Size(227, 59);
+            this.LogOutBTN.TabIndex = 8;
+            this.LogOutBTN.Text = "Log Out";
+            this.LogOutBTN.UseVisualStyleBackColor = true;
+            this.LogOutBTN.Click += new System.EventHandler(this.LogOutBTN_Click);
             // 
             // label1
             // 
@@ -98,7 +116,7 @@ namespace computerShop
             this.DashboardBTN.Location = new System.Drawing.Point(6, 73);
             this.DashboardBTN.Margin = new System.Windows.Forms.Padding(6, 3, 6, 3);
             this.DashboardBTN.Name = "DashboardBTN";
-            this.DashboardBTN.Padding = new System.Windows.Forms.Padding(8, 0, 8, 0);
+            this.DashboardBTN.Padding = new System.Windows.Forms.Padding(8, 0, 40, 0);
             this.DashboardBTN.Size = new System.Drawing.Size(221, 54);
             this.DashboardBTN.TabIndex = 0;
             this.DashboardBTN.Text = "Dashboard";
@@ -119,7 +137,7 @@ namespace computerShop
             this.membersBTN.Location = new System.Drawing.Point(6, 133);
             this.membersBTN.Margin = new System.Windows.Forms.Padding(6, 3, 6, 3);
             this.membersBTN.Name = "membersBTN";
-            this.membersBTN.Padding = new System.Windows.Forms.Padding(8, 0, 8, 0);
+            this.membersBTN.Padding = new System.Windows.Forms.Padding(8, 0, 53, 0);
             this.membersBTN.Size = new System.Drawing.Size(221, 54);
             this.membersBTN.TabIndex = 1;
             this.membersBTN.Text = "Members";
@@ -140,13 +158,32 @@ namespace computerShop
             this.EmployeeBTN.Location = new System.Drawing.Point(6, 193);
             this.EmployeeBTN.Margin = new System.Windows.Forms.Padding(6, 3, 6, 3);
             this.EmployeeBTN.Name = "EmployeeBTN";
-            this.EmployeeBTN.Padding = new System.Windows.Forms.Padding(0, 5, 8, 5);
+            this.EmployeeBTN.Padding = new System.Windows.Forms.Padding(0, 5, 45, 5);
             this.EmployeeBTN.Size = new System.Drawing.Size(221, 54);
             this.EmployeeBTN.TabIndex = 3;
             this.EmployeeBTN.Text = "Employee";
             this.EmployeeBTN.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.EmployeeBTN.UseVisualStyleBackColor = false;
             this.EmployeeBTN.Click += new System.EventHandler(this.EmployeeBTN_Click);
+            // 
+            // ComputersBTN
+            // 
+            this.ComputersBTN.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.ComputersBTN.FlatAppearance.BorderSize = 0;
+            this.ComputersBTN.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.ComputersBTN.Font = new System.Drawing.Font("Lucida Sans", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.ComputersBTN.ForeColor = System.Drawing.Color.White;
+            this.ComputersBTN.Image = ((System.Drawing.Image)(resources.GetObject("ComputersBTN.Image")));
+            this.ComputersBTN.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.ComputersBTN.Location = new System.Drawing.Point(3, 253);
+            this.ComputersBTN.Name = "ComputersBTN";
+            this.ComputersBTN.Padding = new System.Windows.Forms.Padding(0, 0, 40, 0);
+            this.ComputersBTN.Size = new System.Drawing.Size(227, 49);
+            this.ComputersBTN.TabIndex = 4;
+            this.ComputersBTN.Text = "Computers";
+            this.ComputersBTN.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.ComputersBTN.UseVisualStyleBackColor = true;
+            this.ComputersBTN.Click += new System.EventHandler(this.computersBTN_ClickAsync);
             // 
             // main
             // 
@@ -161,21 +198,6 @@ namespace computerShop
             this.main.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.main.Size = new System.Drawing.Size(866, 535);
             this.main.TabIndex = 1;
-            // 
-            // LogOutBTN
-            // 
-            this.LogOutBTN.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.LogOutBTN.FlatAppearance.BorderSize = 0;
-            this.LogOutBTN.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.LogOutBTN.Font = new System.Drawing.Font("Lucida Sans", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LogOutBTN.ForeColor = System.Drawing.Color.White;
-            this.LogOutBTN.Location = new System.Drawing.Point(3, 478);
-            this.LogOutBTN.Name = "LogOutBTN";
-            this.LogOutBTN.Size = new System.Drawing.Size(227, 54);
-            this.LogOutBTN.TabIndex = 4;
-            this.LogOutBTN.Text = "Log Out";
-            this.LogOutBTN.UseVisualStyleBackColor = true;
-            this.LogOutBTN.Click += new System.EventHandler(this.LogOutBTN_Click);
             // 
             // Form1
             // 
@@ -209,5 +231,6 @@ namespace computerShop
         private System.Windows.Forms.TableLayoutPanel main;
         private System.Windows.Forms.Button EmployeeBTN;
         private System.Windows.Forms.Button LogOutBTN;
+        private System.Windows.Forms.Button ComputersBTN;
     }
 }

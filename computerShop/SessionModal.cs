@@ -109,7 +109,7 @@ namespace computerShop
             btnCancel = new Button { Text = "Cancel", DialogResult = DialogResult.Cancel, Size = new Size(70, 32), BackColor = Color.FromArgb(71, 85, 105), ForeColor = Color.White, FlatStyle = FlatStyle.Flat };
             btnAction = new Button { Size = new Size(110, 32), BackColor = Color.FromArgb(34, 197, 94), ForeColor = Color.White, FlatStyle = FlatStyle.Flat };
             btnReserve = new Button { Size = new Size(95, 32), Visible = false, FlatStyle = FlatStyle.Flat };
-            btnStop = new Button { Text = "Stop", Size = new Size(95, 32), Visible = false, BackColor = Color.FromArgb(220, 38, 38), ForeColor = Color.White, FlatStyle = FlatStyle.Flat };
+            btnStop = new Button { Text = "Stop Time", Size = new Size(95, 32), Visible = false, BackColor = Color.FromArgb(220, 38, 38), ForeColor = Color.White, FlatStyle = FlatStyle.Flat };
             btnStop.Click += (s, e) => HandleSubmit(Action.StopTime);
             btnExtend = new Button { Text = "Extend", Size = new Size(95, 32), Visible = false, BackColor = Color.FromArgb(79, 70, 229), ForeColor = Color.White, FlatStyle = FlatStyle.Flat };
 
@@ -138,6 +138,18 @@ namespace computerShop
             btnPanel.Controls.Add(CreateBtn("+1h", 60));
             btnPanel.Controls.Add(CreateBtn("+2h", 120));
             return btnPanel;
+        }
+
+        private void InitializeComponent()
+        {
+            this.SuspendLayout();
+            // 
+            // SessionModal
+            // 
+            this.ClientSize = new System.Drawing.Size(315, 313);
+            this.Name = "SessionModal";
+            this.ResumeLayout(false);
+
         }
 
         private void SetupActionButtonState()

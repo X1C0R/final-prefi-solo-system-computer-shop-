@@ -255,5 +255,54 @@ namespace ComputerDashboard
             var employees = JsonConvert.DeserializeObject<List<Employee>>(json);
             return employees?.FirstOrDefault();
         }
+
+        public static async Task DeleteEmployeeAsync(string employeeId)
+        {
+            var req = new HttpRequestMessage(HttpMethod.Delete,
+                $"{BASE_URL}/rest/v1/employees?id=eq.{employeeId}");
+            req.Headers.Add("Prefer", "return=minimal");
+            await _client.SendAsync(req);
+        }
+
+        // Add a new computer (status defaults to 'available' in the DB)
+        public static async Task AddComputerAsync(string name, int computerNumber, decimal hourlyRate)
+        {
+            var body = new
+            {
+                name = name,
+                computer_number = computerNumber,
+                hourly_rate = hourlyRate,
+                status = "available",
+            };
+            var json = JsonConvert.SerializeObject(body);
+            var req = new HttpRequestMessage(HttpMethod.Post, $"{BASE_URL}/rest/v1/computers");
+            req.Content = new StringContent(json, Encoding.UTF8, "application/json");
+            req.Headers.Add("Prefer", "return=minimal");
+            await _client.SendAsync(req);
+        }
+
+        // Delete a computer by its UUID id
+        public static async Task DeleteComputerAsync(string computerId)
+        {
+            var req = new HttpRequestMessage(HttpMethod.Delete,
+                $"{BASE_URL}/rest/v1/computers?id=eq.{computerId}");
+            req.Headers.Add("Prefer", "return=minimal");
+            await _client.SendAsync(req);
+        }
+
+        public static async Task DeleteMemberAndSessionsAsync(string memberId)
+        {
+            // 1. Delete all sessions linked to this member_id
+            var sessionReq = new HttpRequestMessage(HttpMethod.Delete,
+                $"{BASE_URL}/rest/v1/member_sessions?member_id=eq.{memberId}");
+            sessionReq.Headers.Add("Prefer", "return=minimal");
+            await _client.SendAsync(sessionReq);
+
+            // 2. Now delete the member from the members table
+            var memberReq = new HttpRequestMessage(HttpMethod.Delete,
+                $"{BASE_URL}/rest/v1/members?id=eq.{memberId}");
+            memberReq.Headers.Add("Prefer", "return=minimal");
+            await _client.SendAsync(memberReq);
+        }
     }
 }

@@ -21,11 +21,11 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(320, 420); // Your custom size
+            this.ClientSize = new System.Drawing.Size(425, 422);
             this.Name = "EmployeeModal";
             this.Text = "Create New Employee";
             this.ResumeLayout(false);
-            this.PerformLayout();
+
         }
     }
 }
