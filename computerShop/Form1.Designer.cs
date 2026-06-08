@@ -198,6 +198,7 @@ namespace computerShop
             this.main.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.main.Size = new System.Drawing.Size(866, 535);
             this.main.TabIndex = 1;
+            this.main.Paint += new System.Windows.Forms.PaintEventHandler(this.main_Paint);
             // 
             // Form1
             // 

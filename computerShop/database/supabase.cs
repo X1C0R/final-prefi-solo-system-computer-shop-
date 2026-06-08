@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using Supabase;
 using Supabase.Postgrest.Attributes;
 using Supabase.Postgrest.Models;
 using System;
@@ -303,6 +304,26 @@ namespace ComputerDashboard
                 $"{BASE_URL}/rest/v1/members?id=eq.{memberId}");
             memberReq.Headers.Add("Prefer", "return=minimal");
             await _client.SendAsync(memberReq);
+        }
+
+        public static async Task UpdateComputerAsync(Computer pc)
+        {
+            // Prepare the fields you want to update
+            var patch = new
+            {
+                computer_number = pc.ComputerNumber,
+                name = pc.Name,
+                hourly_rate = pc.HourlyRate
+            };
+
+            var json = JsonConvert.SerializeObject(patch);
+
+            // Use the same HttpClient pattern as your other methods
+            var req = new HttpRequestMessage(new HttpMethod("PATCH"), $"{BASE_URL}/rest/v1/computers?id=eq.{pc.Id}");
+            req.Content = new StringContent(json, Encoding.UTF8, "application/json");
+            req.Headers.Add("Prefer", "return=minimal");
+
+            await _client.SendAsync(req);
         }
     }
 }

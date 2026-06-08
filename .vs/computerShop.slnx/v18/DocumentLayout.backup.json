@@ -3,6 +3,30 @@
   "WorkspaceRootPath": "E:\\Users\\GOD IS LOVE\\Documents\\Mark code\\computerShop\\",
   "Documents": [
     {
+      "AbsoluteMoniker": "D:0:0:{FD26C541-D0BE-4448-89EC-0CFA6591B6EF}|computerShop\\computerShop.csproj|E:\\Users\\GOD IS LOVE\\Documents\\Mark code\\computerShop\\computershop\\computerpanel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{FD26C541-D0BE-4448-89EC-0CFA6591B6EF}|computerShop\\computerShop.csproj|solutionrelative:computershop\\computerpanel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{FD26C541-D0BE-4448-89EC-0CFA6591B6EF}|computerShop\\computerShop.csproj|e:\\users\\god is love\\documents\\mark code\\computershop\\computershop\\editcomputermodal.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{FD26C541-D0BE-4448-89EC-0CFA6591B6EF}|computerShop\\computerShop.csproj|solutionrelative:computershop\\editcomputermodal.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{FD26C541-D0BE-4448-89EC-0CFA6591B6EF}|computerShop\\computerShop.csproj|E:\\Users\\GOD IS LOVE\\Documents\\Mark code\\computerShop\\computershop\\database\\supabase.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{FD26C541-D0BE-4448-89EC-0CFA6591B6EF}|computerShop\\computerShop.csproj|solutionrelative:computershop\\database\\supabase.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{FD26C541-D0BE-4448-89EC-0CFA6591B6EF}|computerShop\\computerShop.csproj|E:\\Users\\GOD IS LOVE\\Documents\\Mark code\\computerShop\\computershop\\dashboardpanel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{FD26C541-D0BE-4448-89EC-0CFA6591B6EF}|computerShop\\computerShop.csproj|solutionrelative:computershop\\dashboardpanel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{FD26C541-D0BE-4448-89EC-0CFA6591B6EF}|computerShop\\computerShop.csproj|E:\\Users\\GOD IS LOVE\\Documents\\Mark code\\computerShop\\computershop\\form1.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form",
+      "RelativeMoniker": "D:0:0:{FD26C541-D0BE-4448-89EC-0CFA6591B6EF}|computerShop\\computerShop.csproj|solutionrelative:computershop\\form1.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{FD26C541-D0BE-4448-89EC-0CFA6591B6EF}|computerShop\\computerShop.csproj|E:\\Users\\GOD IS LOVE\\Documents\\Mark code\\computerShop\\computershop\\form1.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{FD26C541-D0BE-4448-89EC-0CFA6591B6EF}|computerShop\\computerShop.csproj|solutionrelative:computershop\\form1.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{FD26C541-D0BE-4448-89EC-0CFA6591B6EF}|computerShop\\computerShop.csproj|e:\\users\\god is love\\documents\\mark code\\computershop\\computershop\\sessionmodal.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{FD26C541-D0BE-4448-89EC-0CFA6591B6EF}|computerShop\\computerShop.csproj|solutionrelative:computershop\\sessionmodal.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
@@ -15,18 +39,6 @@
       "RelativeMoniker": "D:0:0:{FD26C541-D0BE-4448-89EC-0CFA6591B6EF}|computerShop\\computerShop.csproj|solutionrelative:computershop\\memberspanel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{FD26C541-D0BE-4448-89EC-0CFA6591B6EF}|computerShop\\computerShop.csproj|E:\\Users\\GOD IS LOVE\\Documents\\Mark code\\computerShop\\computershop\\database\\supabase.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{FD26C541-D0BE-4448-89EC-0CFA6591B6EF}|computerShop\\computerShop.csproj|solutionrelative:computershop\\database\\supabase.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{FD26C541-D0BE-4448-89EC-0CFA6591B6EF}|computerShop\\computerShop.csproj|E:\\Users\\GOD IS LOVE\\Documents\\Mark code\\computerShop\\computershop\\form1.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{FD26C541-D0BE-4448-89EC-0CFA6591B6EF}|computerShop\\computerShop.csproj|solutionrelative:computershop\\form1.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{FD26C541-D0BE-4448-89EC-0CFA6591B6EF}|computerShop\\computerShop.csproj|E:\\Users\\GOD IS LOVE\\Documents\\Mark code\\computerShop\\computershop\\form1.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form",
-      "RelativeMoniker": "D:0:0:{FD26C541-D0BE-4448-89EC-0CFA6591B6EF}|computerShop\\computerShop.csproj|solutionrelative:computershop\\form1.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{FD26C541-D0BE-4448-89EC-0CFA6591B6EF}|computerShop\\computerShop.csproj|E:\\Users\\GOD IS LOVE\\Documents\\Mark code\\computerShop\\computershop\\login.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{FD26C541-D0BE-4448-89EC-0CFA6591B6EF}|computerShop\\computerShop.csproj|solutionrelative:computershop\\login.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
@@ -37,18 +49,6 @@
     {
       "AbsoluteMoniker": "D:0:0:{FD26C541-D0BE-4448-89EC-0CFA6591B6EF}|computerShop\\computerShop.csproj|E:\\Users\\GOD IS LOVE\\Documents\\Mark code\\computerShop\\computershop\\addcomputermodal.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{FD26C541-D0BE-4448-89EC-0CFA6591B6EF}|computerShop\\computerShop.csproj|solutionrelative:computershop\\addcomputermodal.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{FD26C541-D0BE-4448-89EC-0CFA6591B6EF}|computerShop\\computerShop.csproj|E:\\Users\\GOD IS LOVE\\Documents\\Mark code\\computerShop\\computershop\\dashboardpanel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{FD26C541-D0BE-4448-89EC-0CFA6591B6EF}|computerShop\\computerShop.csproj|solutionrelative:computershop\\dashboardpanel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{FD26C541-D0BE-4448-89EC-0CFA6591B6EF}|computerShop\\computerShop.csproj|E:\\Users\\GOD IS LOVE\\Documents\\Mark code\\computerShop\\computershop\\computerpanel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{FD26C541-D0BE-4448-89EC-0CFA6591B6EF}|computerShop\\computerShop.csproj|solutionrelative:computershop\\computerpanel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{FD26C541-D0BE-4448-89EC-0CFA6591B6EF}|computerShop\\computerShop.csproj|E:\\Users\\GOD IS LOVE\\Documents\\Mark code\\computerShop\\computershop\\form1.designer.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{FD26C541-D0BE-4448-89EC-0CFA6591B6EF}|computerShop\\computerShop.csproj|solutionrelative:computershop\\form1.designer.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{FD26C541-D0BE-4448-89EC-0CFA6591B6EF}|computerShop\\computerShop.csproj|E:\\Users\\GOD IS LOVE\\Documents\\Mark code\\computerShop\\computershop\\employeemodal.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -78,11 +78,11 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 14,
+          "SelectedChildIndex": 6,
           "Children": [
             {
               "$type": "Document",
-              "DocumentIndex": 6,
+              "DocumentIndex": 9,
               "Title": "Login.cs",
               "DocumentMoniker": "E:\\Users\\GOD IS LOVE\\Documents\\Mark code\\computerShop\\computerShop\\Login.cs",
               "RelativeDocumentMoniker": "computerShop\\Login.cs",
@@ -100,6 +100,19 @@
             {
               "$type": "Document",
               "DocumentIndex": 1,
+              "Title": "EditComputerModal.cs",
+              "DocumentMoniker": "E:\\Users\\GOD IS LOVE\\Documents\\Mark code\\computerShop\\computerShop\\EditComputerModal.cs",
+              "RelativeDocumentMoniker": "computerShop\\EditComputerModal.cs",
+              "ToolTip": "E:\\Users\\GOD IS LOVE\\Documents\\Mark code\\computerShop\\computerShop\\EditComputerModal.cs",
+              "RelativeToolTip": "computerShop\\EditComputerModal.cs",
+              "ViewState": "AgIAAAYAAAAAAAAAAAAAACQAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-06-08T15:35:48.829Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
               "Title": "SessionModal.cs [Design]",
               "DocumentMoniker": "E:\\Users\\GOD IS LOVE\\Documents\\Mark code\\computerShop\\computerShop\\SessionModal.cs",
               "RelativeDocumentMoniker": "computerShop\\SessionModal.cs",
@@ -111,7 +124,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 7,
+              "DocumentIndex": 10,
               "Title": "Login.cs [Design]",
               "DocumentMoniker": "E:\\Users\\GOD IS LOVE\\Documents\\Mark code\\computerShop\\computerShop\\Login.cs",
               "RelativeDocumentMoniker": "computerShop\\Login.cs",
@@ -123,18 +136,6 @@
             {
               "$type": "Document",
               "DocumentIndex": 11,
-              "Title": "Form1.Designer.cs",
-              "DocumentMoniker": "E:\\Users\\GOD IS LOVE\\Documents\\Mark code\\computerShop\\computerShop\\Form1.Designer.cs",
-              "RelativeDocumentMoniker": "computerShop\\Form1.Designer.cs",
-              "ToolTip": "E:\\Users\\GOD IS LOVE\\Documents\\Mark code\\computerShop\\computerShop\\Form1.Designer.cs",
-              "RelativeToolTip": "computerShop\\Form1.Designer.cs",
-              "ViewState": "AgIAAJgAAAAAAAAAAAAvwLkAAABbAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-06-07T17:34:05.97Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 8,
               "Title": "Addcomputermodal.cs",
               "DocumentMoniker": "E:\\Users\\GOD IS LOVE\\Documents\\Mark code\\computerShop\\computerShop\\Addcomputermodal.cs",
               "RelativeDocumentMoniker": "computerShop\\Addcomputermodal.cs",
@@ -146,15 +147,16 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 10,
+              "DocumentIndex": 0,
               "Title": "ComputerPanel.cs",
               "DocumentMoniker": "E:\\Users\\GOD IS LOVE\\Documents\\Mark code\\computerShop\\computerShop\\ComputerPanel.cs",
               "RelativeDocumentMoniker": "computerShop\\ComputerPanel.cs",
-              "ToolTip": "E:\\Users\\GOD IS LOVE\\Documents\\Mark code\\computerShop\\computerShop\\ComputerPanel.cs",
-              "RelativeToolTip": "computerShop\\ComputerPanel.cs",
-              "ViewState": "AgIAAOUAAAAAAAAAAAAwwPYAAAAsAAAAAAAAAA==",
+              "ToolTip": "E:\\Users\\GOD IS LOVE\\Documents\\Mark code\\computerShop\\computerShop\\ComputerPanel.cs*",
+              "RelativeToolTip": "computerShop\\ComputerPanel.cs*",
+              "ViewState": "AgIAAGEAAAAAAAAAAAAtwHMAAACDAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-06-07T17:29:03.547Z"
+              "WhenOpened": "2026-06-07T17:29:03.547Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
@@ -170,14 +172,15 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 5,
+              "DocumentIndex": 4,
               "Title": "Form1.cs [Design]",
               "DocumentMoniker": "E:\\Users\\GOD IS LOVE\\Documents\\Mark code\\computerShop\\computerShop\\Form1.cs",
               "RelativeDocumentMoniker": "computerShop\\Form1.cs",
               "ToolTip": "E:\\Users\\GOD IS LOVE\\Documents\\Mark code\\computerShop\\computerShop\\Form1.cs [Design]",
               "RelativeToolTip": "computerShop\\Form1.cs [Design]",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-06-07T15:55:17.345Z"
+              "WhenOpened": "2026-06-07T15:55:17.345Z",
+              "EditorCaption": " [Design]"
             },
             {
               "$type": "Document",
@@ -228,7 +231,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 8,
               "Title": "MembersPanel.cs",
               "DocumentMoniker": "E:\\Users\\GOD IS LOVE\\Documents\\Mark code\\computerShop\\computerShop\\MembersPanel.cs",
               "RelativeDocumentMoniker": "computerShop\\MembersPanel.cs",
@@ -240,7 +243,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 6,
               "Title": "SessionModal.cs",
               "DocumentMoniker": "E:\\Users\\GOD IS LOVE\\Documents\\Mark code\\computerShop\\computerShop\\SessionModal.cs",
               "RelativeDocumentMoniker": "computerShop\\SessionModal.cs",
@@ -253,39 +256,42 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 9,
+              "DocumentIndex": 3,
               "Title": "DashboardPanel.cs",
               "DocumentMoniker": "E:\\Users\\GOD IS LOVE\\Documents\\Mark code\\computerShop\\computerShop\\DashboardPanel.cs",
               "RelativeDocumentMoniker": "computerShop\\DashboardPanel.cs",
               "ToolTip": "E:\\Users\\GOD IS LOVE\\Documents\\Mark code\\computerShop\\computerShop\\DashboardPanel.cs",
               "RelativeToolTip": "computerShop\\DashboardPanel.cs",
-              "ViewState": "AgIAAAsAAAAAAAAAAAAQwCEAAAANAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAACEAAAANAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-06-03T19:29:44.867Z"
+              "WhenOpened": "2026-06-03T19:29:44.867Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 2,
               "Title": "supabase.cs",
               "DocumentMoniker": "E:\\Users\\GOD IS LOVE\\Documents\\Mark code\\computerShop\\computerShop\\database\\supabase.cs",
               "RelativeDocumentMoniker": "computerShop\\database\\supabase.cs",
               "ToolTip": "E:\\Users\\GOD IS LOVE\\Documents\\Mark code\\computerShop\\computerShop\\database\\supabase.cs",
               "RelativeToolTip": "computerShop\\database\\supabase.cs",
-              "ViewState": "AgIAABMBAAAAAAAAAADwvzEBAAAJAAAAAAAAAA==",
+              "ViewState": "AgIAACoBAAAAAAAAAAAgwEYBAAAJAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-06-03T18:31:12.312Z"
+              "WhenOpened": "2026-06-03T18:31:12.312Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 4,
+              "DocumentIndex": 5,
               "Title": "Form1.cs",
               "DocumentMoniker": "E:\\Users\\GOD IS LOVE\\Documents\\Mark code\\computerShop\\computerShop\\Form1.cs",
               "RelativeDocumentMoniker": "computerShop\\Form1.cs",
               "ToolTip": "E:\\Users\\GOD IS LOVE\\Documents\\Mark code\\computerShop\\computerShop\\Form1.cs",
               "RelativeToolTip": "computerShop\\Form1.cs",
-              "ViewState": "AgIAABkAAAAAAAAAAAA1wCwAAAAzAAAAAAAAAA==",
+              "ViewState": "AgIAAJYAAAAAAAAAAAAowCYAAAAJAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-06-03T15:39:50.903Z"
+              "WhenOpened": "2026-06-03T15:39:50.903Z",
+              "EditorCaption": ""
             }
           ]
         }

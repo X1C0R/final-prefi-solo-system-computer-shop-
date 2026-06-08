@@ -34,6 +34,7 @@ namespace computerShop
                 _computersPanel.Visible = false;
                 main.Controls.Add(_computersPanel, 0, 0);
                 main.SetRowSpan(_computersPanel, 2);
+                
             }
         }
 
@@ -359,6 +360,11 @@ namespace computerShop
             _employeesPanel.Visible = false;
             _computersPanel.Visible = true;
             await _computersPanel.LoadComputersAsync();
+        }
+
+        private void main_Paint(object sender, PaintEventArgs e)
+        {
+
         }
     }
 }
